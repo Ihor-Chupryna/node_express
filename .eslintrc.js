@@ -7,7 +7,6 @@ module.exports = {
   plugins: ["@typescript-eslint", "simple-import-sort"],
   root: true,
   rules: {
-    "eslint no-console": ["error", { allow: ["warn", "error"] }],
     "no-unused-vars": ["error", { argsIgnorePattern: "req|res|next" }],
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
