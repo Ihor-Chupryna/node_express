@@ -12,29 +12,25 @@ class UserService {
   }
 
   public async getById(userId: string): Promise<IUser> {
+    return await this.findUserOrThrow(userId);
+  }
+
+  public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
+    await this.deleteById(userId);
+    return await userRepository.updateById(userId, dto);
+  }
+
+  public async deleteById(userId: string): Promise<void> {
+    await this.findUserOrThrow(userId);
+    await userRepository.deleteById(userId);
+  }
+
+  private async findUserOrThrow(userId: string): Promise<IUser> {
     const user = await userRepository.getById(userId);
     if (!user) {
       throw new ApiError("user not found", 404);
     }
     return user;
-  }
-
-  public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
-    const user = await userRepository.getById(userId);
-    if (!user) {
-      throw new ApiError("user not found", 404);
-    }
-
-    return await userRepository.updateById(userId, dto);
-  }
-
-  public async deleteById(userId: string): Promise<void> {
-    const user = await userRepository.getById(userId);
-    if (!user) {
-      throw new ApiError("user not found", 404);
-    }
-
-    return await userRepository.deleteById(userId);
   }
 }
 
