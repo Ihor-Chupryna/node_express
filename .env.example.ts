@@ -1,3 +1,2 @@
 PORT=
-HOST=
 MONGO_URL=
