@@ -1,6 +1,7 @@
 import * as jsonwebtoken from "jsonwebtoken";
 
 import { config } from "../configs/config";
+import { ApiError } from "../errors/api.errors";
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { ITokenResponse } from "../interfaces/token.interface";
 
@@ -18,6 +19,17 @@ class TokenService {
       refreshToken,
       refreshExpiresIn: config.JWT_REFRESH_EXPIRES_IN,
     };
+  }
+
+  public checkToken(token: string): IJWTPayload {
+    try {
+      return jsonwebtoken.verify(
+        token,
+        config.JWT_ACCESS_SECRET,
+      ) as IJWTPayload;
+    } catch (err) {
+      throw new ApiError("Token is not valid", 401);
+    }
   }
 }
 

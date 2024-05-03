@@ -12,7 +12,7 @@ class UserService {
   }
 
   public async updateById(userId: string, dto: Partial<IUser>): Promise<IUser> {
-    await this.deleteById(userId);
+    await this.findUserOrThrow(userId);
     return await userRepository.updateById(userId, dto);
   }
 
