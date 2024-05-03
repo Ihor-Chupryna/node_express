@@ -7,11 +7,6 @@ class UserService {
     return await userRepository.getAll();
   }
 
-  public async create(dto: Partial<IUser>): Promise<IUser> {
-    await this.isMailExists(dto.email);
-    return await userRepository.create(dto);
-  }
-
   public async getById(userId: string): Promise<IUser> {
     return await this.findUserOrThrow(userId);
   }
@@ -24,13 +19,6 @@ class UserService {
   public async deleteById(userId: string): Promise<void> {
     await this.findUserOrThrow(userId);
     await userRepository.deleteById(userId);
-  }
-
-  private async isMailExists(email: string): Promise<void> {
-    const user = await userRepository.getByParams({ email });
-    if (user) {
-      throw new ApiError("email already exist", 400);
-    }
   }
 
   private async findUserOrThrow(userId: string): Promise<IUser> {

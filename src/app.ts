@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 import { config } from "./configs/config";
 import { ApiError } from "./errors/api.errors";
+import { authRouter } from "./routers/auth.router";
 import { greetingRouter } from "./routers/greetings.router";
 import { userRouter } from "./routers/user.router";
 
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/greeting", greetingRouter);
+app.use("/auth", authRouter);
 app.use("/users", userRouter);
 
 app.use(
