@@ -8,20 +8,20 @@ import { UserValidator } from "../validators/user.validator";
 const router = Router();
 
 router.get("/", userController.getAll);
-router.post("/", commonMiddleware.isBodyValid(UserValidator.create));
+router.get("/me", authMiddleware.checkAccessToken, userController.getMe);
 
-router.get("/:userId", commonMiddleware.isIdValid, userController.getById);
 router.put(
-  "/:userId",
+  "/me",
   authMiddleware.checkAccessToken,
   commonMiddleware.isBodyValid(UserValidator.update),
-  commonMiddleware.isIdValid,
-  userController.updateById,
+  userController.updateMe,
 );
+router.delete("/me", authMiddleware.checkAccessToken, userController.deleteMe);
 router.delete(
-  "/:userId",
-  commonMiddleware.isIdValid,
-  userController.deleteById,
+  "/soft-delete-me",
+  authMiddleware.checkAccessToken,
+  userController.softDeleteMe,
 );
+router.get("/:userId", commonMiddleware.isIdValid, userController.getById);
 
 export const userRouter = router;
