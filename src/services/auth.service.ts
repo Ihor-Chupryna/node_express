@@ -1,9 +1,11 @@
+import { EmailTypeEnum } from "../enums/email-type.enum";
 import { ApiError } from "../errors/api.errors";
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { IToken, ITokenResponse } from "../interfaces/token.interface";
 import { IUser } from "../interfaces/user.interface";
 import { tokenRepository } from "../repositories/token.repository";
 import { userRepository } from "../repositories/user.repository";
+import { emailService } from "./email.service";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
@@ -27,6 +29,9 @@ class AuthService {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
       _userId: user._id,
+    });
+    await emailService.sendMail(dto.email, EmailTypeEnum.WELCOME, {
+      name: dto.name,
     });
     return { user, tokens };
   }
