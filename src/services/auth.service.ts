@@ -130,6 +130,7 @@ class AuthService {
     const hashedPassword = await passwordService.hashPassword(dto.password);
     await userRepository.updateById(user._id, { password: hashedPassword });
     await actionTokenRepository.deleteByParams({ _userId: user._id });
+    await tokenRepository.deleteByParams({ _userId: user._id });
   }
 }
 
