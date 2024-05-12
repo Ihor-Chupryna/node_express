@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
+import { ActionTokenTypeEnum } from "../enums/action-token-type.enum";
 import { TokenTypeEnum } from "../enums/token-type.enum";
 import { ApiError } from "../errors/api.errors";
+import { actionTokenRepository } from "../repositories/action-token.repository";
 import { tokenRepository } from "../repositories/token.repository";
 import { tokenService } from "../services/token.service";
 
@@ -61,6 +63,32 @@ class AuthMiddleware {
 
       req.res.locals.jwtPayload = payload;
       req.res.locals.tokenPair = checkTokenInDb;
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
+  public async checkActionToken(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    try {
+      const actionToken = req.query.token as string;
+      if (!actionToken) {
+        throw new ApiError("No token provided", 400);
+      }
+      const payload = tokenService.checkActionToken(
+        actionToken,
+        ActionTokenTypeEnum.FORGOT,
+      );
+      const entity = await actionTokenRepository.findByParams({
+        actionToken,
+      });
+      if (!entity) {
+        throw new ApiError("Invalid token", 401);
+      }
+      req.res.locals.jwtPayload = payload;
       next();
     } catch (err) {
       next(err);

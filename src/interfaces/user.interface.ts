@@ -11,3 +11,21 @@ export interface IUser {
   isDeleted: boolean;
   isVerified: boolean;
 }
+
+export interface IPublicUser {
+  _id: string;
+  name: string;
+  email: string;
+  age: number;
+}
+
+export interface IPrivetUser {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  age: number;
+  role: RoleEnums;
+  isDeleted: boolean;
+  isVerified: boolean;
+}
