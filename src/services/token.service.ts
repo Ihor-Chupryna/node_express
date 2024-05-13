@@ -61,9 +61,11 @@ class TokenService {
     switch (type) {
       case ActionTokenTypeEnum.FORGOT:
         secret = config.JWT_ACTION_FORGOT_SECRET;
-        expiresIn = config.JWT_ACCESS_EXPIRES_IN;
+        expiresIn = config.JWT_ACTION_FORGOT_EXPIRES;
         break;
       case ActionTokenTypeEnum.VERIFY:
+        secret = config.JWT_ACTION_VERIFY_SECRET;
+        expiresIn = config.JWT_ACTION_VERIFY_EXPIRES;
         break;
       default:
         throw new ApiError("Invalid token type", 500);
@@ -84,6 +86,7 @@ class TokenService {
           secret = config.JWT_ACTION_FORGOT_SECRET;
           break;
         case ActionTokenTypeEnum.VERIFY:
+          secret = config.JWT_ACTION_VERIFY_SECRET;
           break;
         default:
           throw new ApiError("Invalid token type", 500);

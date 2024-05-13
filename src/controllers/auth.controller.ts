@@ -5,6 +5,7 @@ import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { IToken } from "../interfaces/token.interface";
 import { IUser } from "../interfaces/user.interface";
 import { AuthPresenter } from "../presentor/auth.presenter";
+import { UserPresenter } from "../presentor/user.presenter";
 import { authService } from "../services/auth.service";
 
 class AuthController {
@@ -64,6 +65,18 @@ class AuthController {
 
       await authService.setForgotPassword(body, jwtPayload);
       res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  public async verify(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as IJWTPayload;
+      const user = await authService.verify(jwtPayload);
+
+      const response = UserPresenter.toPrivetResponseDto(user);
+      res.status(201).json(response);
     } catch (err) {
       next(err);
     }
