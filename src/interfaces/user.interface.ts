@@ -29,3 +29,8 @@ export interface IPrivetUser {
   isDeleted: boolean;
   isVerified: boolean;
 }
+
+export interface IChangePassword {
+  oldPassword: string;
+  newPassword: string;
+}
