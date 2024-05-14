@@ -1,16 +1,13 @@
 import { CronJob } from "cron";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/advancedFormat";
 
+import { TimeHelper } from "../helpers/time.helpers";
 import { tokenRepository } from "../repositories/token.repository";
-
-dayjs.extend(utc);
 
 const handler = async () => {
   try {
     console.log("[START CRON] Remove old tokens");
     await tokenRepository.deleteByParams({
-      createdAt: { $lt: dayjs().subtract(5, "days") },
+      createdAt: { $lt: TimeHelper.subtractByParams(4, "days") },
     });
   } catch (err) {
     console.error("remove old tokens:", err);
