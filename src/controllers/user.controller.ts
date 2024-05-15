@@ -84,6 +84,17 @@ class UserController {
       next(err);
     }
   }
+  public async deleteAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as IJWTPayload;
+
+      const user = await userService.deleteAvatar(jwtPayload.userId);
+      const response = UserPresenter.toPrivetResponseDto(user);
+      res.status(201).json(response);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export const userController = new UserController();

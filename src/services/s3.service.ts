@@ -1,10 +1,16 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { UploadedFile } from "express-fileupload";
 
 import { config } from "../configs/config";
+import { FileItemTypeEnum } from "../enums/file-item-type.enum";
+import { ApiError } from "../errors/api.errors";
 
 class S3Service {
   constructor(
@@ -18,7 +24,7 @@ class S3Service {
   ) {}
   public async uploadFile(
     file: UploadedFile,
-    folder: "user",
+    folder: FileItemTypeEnum.USER,
     itemId: string,
   ): Promise<string> {
     try {
@@ -38,7 +44,25 @@ class S3Service {
       console.error("Error upload: ", err);
     }
   }
-  private buildPath(folder: string, itemId: string, fileName: string): string {
+
+  public async deleteFile(filePath: string): Promise<void> {
+    try {
+      await this.client.send(
+        new DeleteObjectCommand({
+          Bucket: config.AWS_S3_BUCKET_NAME,
+          Key: filePath,
+        }),
+      );
+    } catch (err) {
+      throw new ApiError("Error deleting", err);
+    }
+  }
+
+  private buildPath(
+    folder: FileItemTypeEnum.USER,
+    itemId: string,
+    fileName: string,
+  ): string {
     return `${folder}/${itemId}/${randomUUID()}${path.extname(fileName)}`;
   }
 }
