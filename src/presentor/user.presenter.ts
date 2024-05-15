@@ -1,3 +1,4 @@
+import { config } from "../configs/config";
 import { IPrivetUser, IPublicUser, IUser } from "../interfaces/user.interface";
 
 export class UserPresenter {
@@ -7,6 +8,7 @@ export class UserPresenter {
       name: user.name,
       email: user.email,
       age: user.age,
+      avatar: user.avatar ? `${config.AWS_S3_ENDPOINT}/${user.avatar}` : null,
     };
   }
 
@@ -22,6 +24,7 @@ export class UserPresenter {
       phone: user.phone,
       age: user.age,
       role: user.role,
+      avatar: user.avatar ? `${config.AWS_S3_ENDPOINT}/${user.avatar}` : null,
       isDeleted: user.isDeleted,
       isVerified: user.isVerified,
     };

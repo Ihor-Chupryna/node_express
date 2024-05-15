@@ -1,6 +1,9 @@
+import { UploadedFile } from "express-fileupload";
+
 import { ApiError } from "../errors/api.errors";
 import { IUser } from "../interfaces/user.interface";
 import { userRepository } from "../repositories/user.repository";
+import { s3Service } from "./s3.service";
 
 class UserService {
   public async getAll(): Promise<IUser[]> {
@@ -28,6 +31,15 @@ class UserService {
   public async softDeleteMe(userId: string): Promise<void> {
     await this.findUserOrThrow(userId);
     await userRepository.updateById(userId, { isDeleted: true });
+  }
+
+  public async uploadAvatar(
+    userId: string,
+    avatar: UploadedFile,
+  ): Promise<IUser> {
+    const user = await this.findUserOrThrow(userId);
+    const filePath = await s3Service.uploadFile(avatar, "user", user._id);
+    return await userRepository.updateById(userId, { avatar: filePath });
   }
 
   private async findUserOrThrow(userId: string): Promise<IUser> {

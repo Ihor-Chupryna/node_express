@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
+import fileupload from "express-fileupload";
 import mongoose from "mongoose";
 
 import { config } from "./configs/config";
-import { runCronJobs } from "./crons";
+// import { runCronJobs } from "./crons";
 import { ApiError } from "./errors/api.errors";
 import { authRouter } from "./routers/auth.router";
 import { greetingRouter } from "./routers/greetings.router";
@@ -12,6 +13,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileupload());
 
 app.use("/greeting", greetingRouter);
 app.use("/auth", authRouter);
@@ -30,5 +32,5 @@ process.on("uncaughtException", (error) => {
 app.listen(config.PORT, async () => {
   await mongoose.connect(config.MONGO_URL);
   console.log(`Example app listening on port ${config.PORT}`);
-  runCronJobs();
+  // runCronJobs();
 });

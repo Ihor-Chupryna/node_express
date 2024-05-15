@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UploadedFile } from "express-fileupload";
 
 import { IJWTPayload } from "../interfaces/jwt-payload.interface";
 import { IUser } from "../interfaces/user.interface";
@@ -67,6 +68,18 @@ class UserController {
       const jwtPayload = req.res.locals.jwtPayload as IJWTPayload;
       await userService.softDeleteMe(jwtPayload.userId);
       res.sendStatus(204);
+    } catch (err) {
+      next(err);
+    }
+  }
+  public async uploadAvatar(req: Request, res: Response, next: NextFunction) {
+    try {
+      const jwtPayload = req.res.locals.jwtPayload as IJWTPayload;
+      const avatar = req.files?.avatar as UploadedFile;
+
+      const user = await userService.uploadAvatar(jwtPayload.userId, avatar);
+      const response = UserPresenter.toPrivetResponseDto(user);
+      res.status(201).json(response);
     } catch (err) {
       next(err);
     }

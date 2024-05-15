@@ -8,6 +8,7 @@ export interface IUser {
   password: string;
   age: number;
   role: RoleEnums;
+  avatar: string;
   isDeleted: boolean;
   isVerified: boolean;
 }
@@ -17,6 +18,7 @@ export interface IPublicUser {
   name: string;
   email: string;
   age: number;
+  avatar: string;
 }
 
 export interface IPrivetUser {
@@ -26,6 +28,7 @@ export interface IPrivetUser {
   phone: string;
   age: number;
   role: RoleEnums;
+  avatar: string;
   isDeleted: boolean;
   isVerified: boolean;
 }
